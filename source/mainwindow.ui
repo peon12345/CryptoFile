@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>366</width>
+    <height>190</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>366</width>
+    <height>190</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>366</width>
+    <height>190</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>CryptoFile</string>
+  </property>
+  <property name="iconSize">
+   <size>
+    <width>50</width>
+    <height>50</height>
+   </size>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QLineEdit" name="lineDir">
+    <property name="geometry">
+     <rect>
+      <x>9</x>
+      <y>31</y>
+      <width>261</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="placeholderText">
+     <string>Путь к файлам</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton">
+    <property name="geometry">
+     <rect>
+      <x>280</x>
+      <y>30</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Обзор</string>
+    </property>
+    <property name="icon">
+     <iconset resource="Images.qrc">
+      <normaloff>:/png/folder.png</normaloff>:/png/folder.png</iconset>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineKey">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>70</y>
+      <width>341</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="placeholderText">
+     <string>Ключ</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="comboBox">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>132</y>
+      <width>121</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>Шифровать</string>
+     </property>
+     <property name="icon">
+      <iconset resource="Images.qrc">
+       <normaloff>:/png/enc2.jpg</normaloff>:/png/enc2.jpg</iconset>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Дешифровать</string>
+     </property>
+     <property name="icon">
+      <iconset resource="Images.qrc">
+       <normaloff>:/png/enc.jpg</normaloff>:/png/enc.jpg</iconset>
+     </property>
+    </item>
+   </widget>
+   <widget class="QPushButton" name="pushButton_2">
+    <property name="geometry">
+     <rect>
+      <x>9</x>
+      <y>130</y>
+      <width>81</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Начать</string>
+    </property>
+    <property name="icon">
+     <iconset resource="Images.qrc">
+      <normaloff>:/png/start.png</normaloff>:/png/start.png</iconset>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonKeyGen">
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>100</y>
+      <width>131</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Сгенерировать ключ</string>
+    </property>
+    <property name="icon">
+     <iconset resource="Images.qrc">
+      <normaloff>:/png/grand-master-key.png</normaloff>:/png/grand-master-key.png</iconset>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonSettings">
+    <property name="geometry">
+     <rect>
+      <x>230</x>
+      <y>131</y>
+      <width>91</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Настройки</string>
+    </property>
+    <property name="icon">
+     <iconset resource="Images.qrc">
+      <normaloff>:/png/settings.jpg</normaloff>:/png/settings.jpg</iconset>
+    </property>
+   </widget>
+   <widget class="QLabel" name="status">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>170</y>
+      <width>141</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="keyCheck">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>100</y>
+      <width>191</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <resources>
+  <include location="Images.qrc"/>
+ </resources>
+ <connections/>
+</ui>
