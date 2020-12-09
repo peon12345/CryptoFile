@@ -184,15 +184,6 @@ void Cryptograph::decryptFileAES(QByteArray &input, QByteArray &output, bool isN
             }
         }
 
-        QString str;
-        for(int i = 0;i<16;i++){
-
-               str += IV[i];
-
-        }
-
-        str = str;
-
         m_aes.newFile(IV,false); //добавляем в АЕС вектор инициализации
 
     }
