@@ -258,17 +258,6 @@ void AES::convertAndSetIV(QByteArray &IV){
         }
     }
 
-    QString str;
-    for(int i = 0;i<4;i++){
-
-        for (int j = 0; j < 4;j++){
-           str += m_prevState[i][j];
-        }
-    }
-
-    str = str;
-
-
 }
 
 
