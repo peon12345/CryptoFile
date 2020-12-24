@@ -5,9 +5,6 @@
 #include <windows.h>
 #include <QMap>
 
-
-
-
 class MemoryManager
 {
 public:
@@ -19,12 +16,9 @@ public:
 
     void clearAll();
 
-
     QMap<uint8_t*,size_t>& getLockPtrs();
 
     ~MemoryManager();
-
-
 
 private :
 

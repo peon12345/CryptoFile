@@ -1,61 +1,64 @@
 #ifndef AES_H
 #define AES_H
-#include <string>
+
 #include <iostream>
 #include <QString>
 #include <random>
 #include <ctime>
+
+#include "Ialgorithm.h"
 #include "memorymanager.h"
 
-constexpr uint8_t blockSize = 16;
+constexpr int blockSize = 16;
 
-class AES
+class AES : public Ialgorithm
 {
 
 public:
 
-    explicit AES();
+    AES() = delete;
+    AES(int keyLenght);
 
-    ~AES() = default;
+    virtual ~AES();
 
-    void newFile(uint8_t IV[16],bool encrypt);
-    void encrypt(uint8_t state[4][4],  uint8_t output[]);
-    void decrypt( uint8_t state[4][4],  uint8_t output[]);
-
-    bool setKey(QByteArray &key);
+    void setKey(QString &key) override;
+    int getBlockSize() override;
 
     static int checkKey( const QString &key);
-    static QString generateKey();
-
-    void convertAndSetIV(QByteArray &IV);
-
-    void  getPointersToLock(QMap<uint8_t*,size_t>& ptrsForLock);
-
-
-    static constexpr int EXPANDED_KEY_LENGTH = 176;
-    static constexpr int INITIAL_KEY_LENGTH = 16;
 
 private:
 
-    QMap<uint8_t*,size_t> m_ptrsForLock; //все что может выдать ключ
+    //количество раундов
+    static constexpr int ROUND_128 = 10;
+    static constexpr int ROUND_192 = 12;
+    static constexpr int ROUND_256 = 14;
 
-    bool convertToKeyUInt8(QByteArray &input);
+    //длина ключа
+    static constexpr int KEY_LENGHT_128 = 16;
+    static constexpr int KEY_LENGHT_192 = 24;
+    static constexpr int KEY_LENGHT_256 = 32;
 
-    static constexpr int ROUND_MAX = 10;
+    //длина расширенного ключа
+    static constexpr int EXPANDED_KEY_LENGTH_128 = 176;
+    static constexpr int EXPANDED_KEY_LENGTH_192 = 208;
+    static constexpr int EXPANDED_KEY_LENGTH_256 = 240;
 
-    uint8_t m_key[INITIAL_KEY_LENGTH] ;
-    uint8_t m_wKey[EXPANDED_KEY_LENGTH];
-    uint8_t m_prevState[4][4];
+protected:
+
+    void convertToKeyUInt8(QString &input);
+
+    int m_round;
+
+    uint8_t *m_key;
+    int m_keyLenght;
+
+    uint8_t *m_wKey;
+    int m_wKeyLenght;
+
+
     uint8_t m_roundKey[4][4];
 
-
-    uint8_t buffer[4][4];
-
-
-    void generateInitialVec();
-    void StateXorPrevState(uint8_t state[4][4]);
-
-    void KeyExpansion() ;
+    void KeyExpansion();
     void AddRoundKey(uint8_t state[4][4],uint8_t roundKey[4][4]);
 
     //методы шифрования
@@ -63,7 +66,6 @@ private:
     void SubBytes (uint8_t keyColumn[4]);
     void ShiftRows(uint8_t state[4][4]);
     void MixColumn(uint8_t state[4][4]);
-
 
     //метода дешифрования
     void invSubBytes (uint8_t state[4][4]);

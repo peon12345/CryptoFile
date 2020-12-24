@@ -9,24 +9,19 @@ MemoryManager::~MemoryManager()
 {
 
  clearAll();
-
 }
-
 
 QMap<uint8_t*,size_t>& MemoryManager::getLockPtrs(){
 
     return m_lockPtrs;
 }
 
-
 void MemoryManager::lockMemory(uint8_t *beginMemory, SIZE_T size){
 
    WINAPI::VirtualLock(beginMemory,size);
 
    m_lockPtrs.insert(beginMemory,size);
-
 }
-
 
 void MemoryManager::lockAll() {
 
@@ -40,11 +35,9 @@ void MemoryManager::lockAll() {
      lockMemory(beginMemory,sizeBlock);
 
      ++it;
-
     }
 
 }
-
 
 void MemoryManager::clearAll(){
 
@@ -58,9 +51,7 @@ void MemoryManager::clearAll(){
      WINAPI::SecureZeroMemory(beginMemory,sizeBlock);
 
      ++it;
-
     }
-
 }
 
 

@@ -5,29 +5,36 @@
 #include <QDir>
 #include <QMap>
 
+#include <queue>
+#include <stack>
+#include <future>
+
+#include "settings.h"
+#include "cryptograph.h"
+
 
 class FileManager
 {
 public:
     FileManager();
+    FileManager(const Parametrs &parametrs);
 
-    void copyFilesDir(QString path , bool needCopyFiles = false);
-    static bool checkFiles(size_t sizeFile ,QString path);
+    void cryptoFolder(QString pathFolder, QString key, bool action);
 
-    static void getData(QFile &file,QByteArray &byteArray);
-    static void replaceFile(QFile &file , QByteArray& byteArray);
+    QMap<QString, size_t> copyFilesDir(QString path , bool needCopyFiles = false);
+     bool checkFiles(size_t sizeFile ,QString path);
+     void replaceFile(QFile &file , QByteArray &byteArray);
+     void getData(QFile &file,QByteArray &byteArray);
 
-
-    int backupFolder();
-
-
-    QMap<QString, size_t> m_filesDir;
-
+     int backupFolder();
 
 private:
-    static constexpr size_t GB = 1073741824;
+    int encryptFile(QString path,Cryptograph *cryptograph,size_t size);
+    int decryptFile(QString path,Cryptograph *cryptograph,size_t size);
 
-    void copyFilesRecursion(QString path,QString dst = "");
+    void copyFilesPath(QString path, QMap<QString, size_t> &filesDir , QString dst = "");
+
+    Parametrs m_parametrs;
     bool m_rezervFiles;
     quint64 totalSize;
 };

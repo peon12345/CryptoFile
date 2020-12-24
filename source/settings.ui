@@ -186,15 +186,40 @@
   <widget class="QLabel" name="label_3">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>270</y>
-     <width>111</width>
+     <x>140</x>
+     <y>140</y>
+     <width>131</width>
      <height>20</height>
     </rect>
    </property>
    <property name="text">
-    <string>AES 128bit CBC </string>
+    <string>Алгоритм шифрования</string>
    </property>
+  </widget>
+  <widget class="QComboBox" name="comboBoxAlg">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>140</y>
+     <width>121</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <item>
+    <property name="text">
+     <string>AES 128bit CBC</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>AES 192bit CBC</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>AES 256bit CBC</string>
+    </property>
+   </item>
   </widget>
  </widget>
  <resources>

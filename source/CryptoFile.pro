@@ -20,6 +20,7 @@ QMAKE_CFLAGS_RELEASE += -O0
 
 SOURCES += \
     aes.cpp \
+    aescbc.cpp \
     cryptograph.cpp \
     devicemanagement.cpp \
     filemanager.cpp \
@@ -30,7 +31,9 @@ SOURCES += \
     settings.cpp
 
 HEADERS += \
+    Ialgorithm.h \
     aes.h \
+    aescbc.h \
     cryptograph.h \
     devicemanagement.h \
     filemanager.h \

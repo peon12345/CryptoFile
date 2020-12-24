@@ -11,17 +11,12 @@ MainWindow::MainWindow(QWidget *parent)
     setWindowTitle("CryptoFile");
     setWindowIcon(QIcon(":/png/ICON_CRYPTO.png"));
 
-    settings = new Settings(this);
-    log = new Log(this);
-
 }
 
 MainWindow::~MainWindow()
 {
     ui->lineKey->setText("XXXXXXXXXXXXXXXXXX");
 
-    delete settings;
-    delete log;
     delete ui;
 }
 
@@ -29,74 +24,32 @@ MainWindow::~MainWindow()
 void MainWindow::on_pushButton_2_clicked()
 
 {
-    log->startMovie();
+    log.startMovie();
 
     if(Cryptograph::checkKey(ui->lineKey->text()) != 0){
         ui->status->setText("Ключ слишком простой");
-    }
-
-    QByteArray key = ui->lineKey->text().toUtf8();
-
-    QByteArray IV;
-        if(settings->getSerial("USB") != ""){
-         IV = settings->getSerial("USB").toUtf8();
-        }
-
-        if(settings->getSerial("HDD") != ""){
-        IV += settings->getSerial("HDD").toUtf8();
-        }
-
-
-
-    bool needIV;
-    if(IV.size() ==  0){
-        needIV = true;
+        return void();
     }
 
 
-    bool encrypt;
+    bool encryptAction;
     if(ui->comboBox->currentIndex() == 0){
-        encrypt = true;
+        encryptAction = true;
     } else{
-        encrypt = false;
+        encryptAction = false;
     }
 
-    std::unique_ptr<FileManager> fileManager(new FileManager());
+    FileManager fileManager(settings.getParams());
 
-    bool copyFile = settings->copy();// настройки
+    fileManager.cryptoFolder(ui->lineDir->text(),ui->lineKey->text(),encryptAction);
 
-    fileManager->copyFilesDir(ui->lineDir->text() ,copyFile ); // копия файлов , не архив
 
-    std::queue<std::future<int>> queueTask;
-    std::stack<std::unique_ptr<Cryptograph>> stackCrypt;
-
-    QMap<QString, size_t>::const_iterator itPath = fileManager->m_filesDir.constBegin();
-    while (itPath != fileManager->m_filesDir.constEnd()) {
-
-        QString path = itPath.key();
-        size_t  size = itPath.value();
-
-        stackCrypt.push(std::make_unique<Cryptograph>(key,IV));
-        queueTask.push(std::async(std::launch::async,&Cryptograph::start,std::move(stackCrypt.top()),path,encrypt,size ,needIV));
-
-        itPath++;
-
+    log.stopMovie();
+    if(encryptAction){
+        ui->status->setText("Зашифровано");
+    } else {
+        ui->status->setText("Дешифровано");
     }
-
-    //получим статус каждого файла
-            while(!queueTask.empty()){
-                auto &task = queueTask.front();
-                bool status = task.get();
-                queueTask.pop();
-            }
-
-
-            log->stopMovie();
-            if(encrypt){
-            ui->status->setText("Зашифровано");
-            } else {
-            ui->status->setText("Дешифровано");
-            }
 
 }
 
@@ -114,46 +67,61 @@ void MainWindow::on_pushButton_clicked()
 
 void MainWindow::on_pushButtonKeyGen_clicked()
 {
-    ui->lineKey->setText(Cryptograph::keyGen());
+    Parametrs param = settings.getParams();
+
+    int keyLenght;
+    switch(param.algID){
+    case 0:
+        keyLenght = 16;
+        break;
+
+    case 1:
+        keyLenght = 24;
+        break;
+
+    case 2:
+        keyLenght = 32;
+        break;
+    }
+
+    ui->lineKey->setText(Cryptograph::keyGen(keyLenght));
 }
 
 void MainWindow::on_pushButtonSettings_clicked()
 {
 
-    settings->show();
+    settings.show();
 }
 
 void MainWindow::on_lineKey_textEdited(const QString &arg1)
 {
-   if(ui->comboBox->currentIndex() == 1){ // при дешифровании не проверяем ключ
-       return void();
-   }
+    if(ui->comboBox->currentIndex() == 1){ // при дешифровании не проверяем ключ
+        return void();
+    }
 
-   int status = Cryptograph::checkKey(arg1);
+    int status = Cryptograph::checkKey(arg1);
 
-   switch (status)
-   {
-      case 0:
-          ui->keyCheck->setText("");
-       break;
-      case 1:
-         ui->keyCheck->setText("Слкишком короткий ключ");
-         break;
-      case 2:
-          ui->keyCheck->setText("Требуется верхний регистр");
-          break;
-      case 3:
-          ui->keyCheck->setText("Требуется цифра");
-          break;
-      case 4:
+    switch (status)
+    {
+    case 0:
+        ui->keyCheck->setText("");
+        break;
+    case 1:
+        ui->keyCheck->setText("Слишком короткий ключ");
+        break;
+    case 2:
+        ui->keyCheck->setText("Требуется верхний регистр");
+        break;
+    case 3:
+        ui->keyCheck->setText("Требуется цифра");
+        break;
+    case 4:
         ui->keyCheck->setText("Требуется нижний регистр");
         break;
-      case 5:
+    case 5:
         ui->keyCheck->setText("Введите ключ");
         break;
-
-
-   }
+    }
 }
 
 

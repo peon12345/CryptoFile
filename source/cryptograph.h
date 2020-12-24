@@ -7,38 +7,38 @@
 #include <QByteArray>
 #include <QDir>
 
-#include "filemanager.h"
-#include "aes.h"
+#include "aescbc.h"
 #include "memorymanager.h"
-
-
-
 
 class Cryptograph
 {
 public:
-    explicit Cryptograph( QByteArray &key ,QByteArray &IV,QString encryptionType = "AES");
+    explicit Cryptograph( QString &key ,QString &IV,int keyLenght);
+    explicit Cryptograph( QString &key ,QString encryptionType = "AES");
     Cryptograph() = delete;
 
-    int start(QString path,  bool encrypt ,  size_t sizeFile  ,bool needIV = true );
+    void encryptFile(QByteArray& input,QByteArray& output );
+    void decryptFile(QByteArray& input,QByteArray& output );
 
-    static QString keyGen();
+    void writeNeedDelete(QByteArray &input ,const size_t size);
+
+    void getMetaData(QByteArray &input);
+    void setMetaData(QByteArray &input);
+
+    int getSizeMetaData();
+    int getBlockSize();
+
+    static QString keyGen(int keyLenght);
     static int checkKey( const QString &key);
 
     Cryptograph(const Cryptograph&) = delete;
     Cryptograph& operator=(const Cryptograph&) = delete;
-    ~Cryptograph() ;
+    ~Cryptograph();
 
 
 private:
-    void encryptFileAES(QByteArray& input,QByteArray& output ,bool isNewFile = false);
-    void decryptFileAES(QByteArray& input,QByteArray& output ,bool isNewFile = false);
-    void writeNeedDelete(QByteArray& input ,const size_t size);
-
-    AES m_aes;
-
-    MemoryManager m_memoryManager;
-
+     Ialgorithm *m_alg;
+     MemoryManager m_memoryManager;
 };
 
 #endif // ENCRYPT_H

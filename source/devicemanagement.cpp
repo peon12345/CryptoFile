@@ -9,18 +9,15 @@ DeviceManagement::DeviceManagement()
 // здесь читаем из реестра, подключенный серийник флешки или жесткого диска
 QString DeviceManagement::getSerialDevice(QString deviceType){
 
-
     static constexpr int TOTALBYTES  = 300;
 
     const QString pathStr = "\SYSTEM\\CurrentControlSet\\Services\\disk\\Enum";
     LPCWSTR pathLPCW = (const wchar_t*) pathStr.utf16();
 
-
     HKEY hKey;
     if(::RegOpenKeyEx(HKEY_LOCAL_MACHINE, pathLPCW, 0, KEY_QUERY_VALUE , &hKey) != ERROR_SUCCESS){
         return "";
     }
-
 
     DWORD BufferSize = TOTALBYTES;
     DWORD cbData;
@@ -65,16 +62,12 @@ QString DeviceManagement::getSerialDevice(QString deviceType){
                         break;
                     }
                 }
-
                 if(check == deviceType){
 
                     RegCloseKey(hKey);
                     return getSerialFromName(nameDevice);
                 }
-
-
             }
-
         }
 
     }
