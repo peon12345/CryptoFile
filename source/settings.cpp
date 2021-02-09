@@ -9,15 +9,13 @@ Settings::Settings(QWidget *parent) :
 
     QSettings settings(ORGANIZATION, APPL);
 
-    ui->checkBoxAutoDel->setChecked(settings.value(SETTINGS_AUTO_DEL, false).toBool());
     ui->checkBoxCopyFile->setChecked(settings.value(SETTINGS_ALL_CHECK, false).toBool());
     ui->comboBoxAlg->setCurrentIndex(settings.value(SETTINGS_ALG_ID,0).toInt());
 
-    parametrs.autoDelete = ui->checkBoxAutoDel->isChecked();
-    parametrs.copy = ui->checkBoxCopyFile->isChecked();
-    parametrs.serialUSB = ui->lineEditSerialUSB->text();
-    parametrs.serialHDD = ui->lineEditSerialHDD->text();
-    parametrs.algID = ui->comboBoxAlg->currentIndex();
+    m_parametrs.copy = ui->checkBoxCopyFile->isChecked();
+    m_parametrs.serialUSB = ui->lineEditSerialUSB->text();
+    m_parametrs.serialHDD = ui->lineEditSerialHDD->text();
+    m_parametrs.algID = ui->comboBoxAlg->currentIndex();
 }
 
 Settings::~Settings()
@@ -26,16 +24,21 @@ Settings::~Settings()
 }
 
 Parametrs& Settings::getParams(){
-    return parametrs;
+    return m_parametrs;
+}
+
+int Settings::getAlgID(){
+    return ui->comboBoxAlg->currentIndex();
+}
+
+void Settings::setPath(QString path){
+    m_parametrs.path = path;
 }
 
 bool Settings::copy(){
     return ui->checkBoxCopyFile->isChecked();
 }
 
-bool Settings::autoDel(){
-    return ui->checkBoxAutoDel->isChecked();
-}
 
 QString Settings::getSerial(QString deviceType){
 
@@ -58,11 +61,6 @@ void Settings::on_pushButtonSave_clicked()
 {
     QSettings settings(ORGANIZATION, APPL);
 
-    if(ui->checkBoxAutoDel->isChecked()){
-        settings.setValue(SETTINGS_AUTO_DEL, true);
-    } else {
-        settings.setValue(SETTINGS_AUTO_DEL, false);
-    }
 
     if(ui->checkBoxCopyFile->isChecked()){
         settings.setValue(SETTINGS_ALL_CHECK, true);
@@ -74,11 +72,11 @@ void Settings::on_pushButtonSave_clicked()
 
     settings.sync();
 
-    parametrs.autoDelete = ui->checkBoxAutoDel->isChecked();
-    parametrs.copy = ui->checkBoxCopyFile->isChecked();
-    parametrs.serialUSB = ui->lineEditSerialUSB->text();
-    parametrs.serialHDD = ui->lineEditSerialHDD->text();
-    parametrs.algID = ui->comboBoxAlg->currentIndex();
+
+    m_parametrs.copy = ui->checkBoxCopyFile->isChecked();
+    m_parametrs.serialUSB = ui->lineEditSerialUSB->text();
+    m_parametrs.serialHDD = ui->lineEditSerialHDD->text();
+    m_parametrs.algID = ui->comboBoxAlg->currentIndex();
 
     this->close();
 }
@@ -97,7 +95,7 @@ void Settings::on_pushButtonAddIO_clicked()
         return void();
     }
 
-    ui->lineEditSerialUSB->setText(device.getSerialDevice("USB"));
+    ui->lineEditSerialUSB->setText(m_device.getSerialDevice("USB"));
 
     if(ui->lineEditSerialUSB->text() == ""){
 
@@ -111,8 +109,6 @@ void Settings::on_pushButtonAddIO_clicked()
 
         ui->pushButtonAddIO->setText("Удалить");
     }
-
-
 }
 
 void Settings::on_pushButtonAddIO_2_clicked()
@@ -124,7 +120,7 @@ void Settings::on_pushButtonAddIO_2_clicked()
         return void();
     }
 
-    ui->lineEditSerialHDD->setText(device.getSerialDevice("SCSI"));
+    ui->lineEditSerialHDD->setText(m_device.getSerialDevice("SCSI"));
 
     if(ui->lineEditSerialHDD->text() == ""){
 

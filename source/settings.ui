@@ -52,7 +52,7 @@
    </property>
    <property name="icon">
     <iconset resource="Images.qrc">
-     <normaloff>:/png/add.jpg</normaloff>:/png/add.jpg</iconset>
+     <normaloff>:/png/res/add.jpg</normaloff>:/png/res/add.jpg</iconset>
    </property>
   </widget>
   <widget class="QLabel" name="label">
@@ -101,7 +101,7 @@
    </property>
    <property name="icon">
     <iconset resource="Images.qrc">
-     <normaloff>:/png/ok.png</normaloff>:/png/ok.png</iconset>
+     <normaloff>:/png/res/ok.png</normaloff>:/png/res/ok.png</iconset>
    </property>
   </widget>
   <widget class="QPushButton" name="pushButtonCancel">
@@ -118,20 +118,7 @@
    </property>
    <property name="icon">
     <iconset resource="Images.qrc">
-     <normaloff>:/png/cancel.png</normaloff>:/png/cancel.png</iconset>
-   </property>
-  </widget>
-  <widget class="QCheckBox" name="checkBoxAutoDel">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>220</y>
-     <width>351</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Автоматически удалять сохраненные файлы , после проверки</string>
+     <normaloff>:/png/res/cancel.png</normaloff>:/png/res/cancel.png</iconset>
    </property>
   </widget>
   <widget class="QLineEdit" name="lineEditSerialHDD">
@@ -167,7 +154,7 @@
    </property>
    <property name="icon">
     <iconset resource="Images.qrc">
-     <normaloff>:/png/add.jpg</normaloff>:/png/add.jpg</iconset>
+     <normaloff>:/png/res/add.jpg</normaloff>:/png/res/add.jpg</iconset>
    </property>
   </widget>
   <widget class="QLabel" name="label_2">

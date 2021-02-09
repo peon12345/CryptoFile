@@ -7,7 +7,7 @@
 *****************************************************************************/
 
 #include <memory>
-#include "../../crypto/mainwindow.h"
+#include "../../crypto/source/mainwindow.h"
 #include <QtCore/qbytearray.h>
 #include <QtCore/qmetatype.h>
 #if !defined(Q_MOC_OUTPUT_REVISION)

@@ -1,27 +1,25 @@
 #include "aescbc.h"
 
-AesCbc::AesCbc(QString &key,QString &IV,int keyLenght) : AES(keyLenght)
+AesCbc::AesCbc(QString key,QString IV,int keyLenght) : AES(keyLenght),isIVgenerated(false),isIVpasted(true)
 {
     convertAndSetIV(IV);
-    isIVgenerated = false;
 
     setKey(key);
 }
 
-AesCbc::AesCbc(QString &key,int keyLenght) : AES(keyLenght)
+AesCbc::AesCbc(QString key,int keyLenght,bool generateIV) : AES(keyLenght),isIVgenerated(generateIV),isIVpasted(false)
 {
-    generateInitialVec();
-    isIVgenerated = true;
-
+    if(isIVgenerated){
+        generateInitialVec();
+    }
     setKey(key);
 }
-
 
 QByteArray AesCbc::getMetaData(){
 
     QByteArray IV;
 
-    if(isIVgenerated){
+    if(isIVgenerated || isIVpasted){
         for(int i = 0;i<4;i++){
             for(int j = 0;j<4;j++){
                 IV.append(m_prevState[i][j]);
@@ -40,15 +38,6 @@ void AesCbc::setMetaData(QByteArray &input){
             m_prevState[i][j] = input.at((4 * i)  + j);
         }
     }
-
-QString str;
-for(int i = 0;i<4;i++){
-    for(int j = 0;j<4;j++){
-        str += m_prevState[i][j];
-    }
-}
-
-str = str;
 
 }
 
@@ -197,9 +186,9 @@ void AesCbc::decrypt(uint8_t input[16], uint8_t *output){
     }
 }
 
-void  AesCbc::getPointersToLock(QMap<uint8_t*,size_t>& ptrsForLock){
+void  AesCbc::getPointersToClear(QMap<uint8_t*,size_t>& ptrsForLock){
 
-    ptrsForLock.insert(m_key,m_keyLenght);
+    ptrsForLock.insert(m_key,16);
     ptrsForLock.insert(m_wKey,m_wKeyLenght);
     ptrsForLock.insert(*m_prevState,blockSize);
     ptrsForLock.insert(*m_roundKey,blockSize);
@@ -228,21 +217,9 @@ void AesCbc::generateInitialVec()  {
             m_prevState[j][k] = valueStr.toUInt();
         }
     }
-
-
-    QString str;
-    for(int i = 0;i<4;i++){
-        for(int j = 0;j<4;j++){
-            str += m_prevState[i][j];
-        }
-    }
-
-    str = str;
-
 }
 
-
-void AesCbc::convertAndSetIV(QString &IV){
+void AesCbc::convertAndSetIV(QString IV){
 
     if(IV == ""){
         return void();
@@ -275,7 +252,6 @@ void AesCbc::convertAndSetIV(QString &IV){
             }
         }
     }
-
 }
 
 

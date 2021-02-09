@@ -12,8 +12,8 @@ class settings;
 
 struct Parametrs{
 public:
+    QString path;
     bool copy = false;
-    bool autoDelete = false;
     int algID = 0;
     QString serialUSB = "";
     QString serialHDD = "";
@@ -29,6 +29,8 @@ public:
     QString getSerial(QString deviceType);
 
      Parametrs& getParams();
+     void setPath(QString path);
+     int getAlgID();
      bool copy();
      bool autoDel();
 
@@ -50,13 +52,13 @@ private slots:
     void on_pushButtonAddIO_2_clicked();
 
 private:
-    Parametrs parametrs;
+    Parametrs m_parametrs;
 
     static inline const QString SETTINGS_AUTO_DEL = "settings/auto_delete";
     static inline const QString SETTINGS_ALL_CHECK = "settings/all_check";
     static inline const QString SETTINGS_ALG_ID = "settings/alg_id";
 
-    DeviceManagement device;
+    DeviceManagement m_device;
     Ui::settings *ui;
 };
 

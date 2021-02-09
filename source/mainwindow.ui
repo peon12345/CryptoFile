@@ -59,7 +59,7 @@
     </property>
     <property name="icon">
      <iconset resource="Images.qrc">
-      <normaloff>:/png/folder.png</normaloff>:/png/folder.png</iconset>
+      <normaloff>:/png/res/folder.png</normaloff>:/png/res/folder.png</iconset>
     </property>
    </widget>
    <widget class="QLineEdit" name="lineKey">
@@ -90,7 +90,7 @@
      </property>
      <property name="icon">
       <iconset resource="Images.qrc">
-       <normaloff>:/png/enc2.jpg</normaloff>:/png/enc2.jpg</iconset>
+       <normaloff>:/png/res/enc2.jpg</normaloff>:/png/res/enc2.jpg</iconset>
      </property>
     </item>
     <item>
@@ -99,7 +99,7 @@
      </property>
      <property name="icon">
       <iconset resource="Images.qrc">
-       <normaloff>:/png/enc.jpg</normaloff>:/png/enc.jpg</iconset>
+       <normaloff>:/png/res/enc.jpg</normaloff>:/png/res/enc.jpg</iconset>
      </property>
     </item>
    </widget>
@@ -117,7 +117,7 @@
     </property>
     <property name="icon">
      <iconset resource="Images.qrc">
-      <normaloff>:/png/start.png</normaloff>:/png/start.png</iconset>
+      <normaloff>:/png/res/start.png</normaloff>:/png/res/start.png</iconset>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButtonKeyGen">
@@ -134,7 +134,7 @@
     </property>
     <property name="icon">
      <iconset resource="Images.qrc">
-      <normaloff>:/png/grand-master-key.png</normaloff>:/png/grand-master-key.png</iconset>
+      <normaloff>:/png/res/grand-master-key.png</normaloff>:/png/res/grand-master-key.png</iconset>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButtonSettings">
@@ -151,20 +151,7 @@
     </property>
     <property name="icon">
      <iconset resource="Images.qrc">
-      <normaloff>:/png/settings.jpg</normaloff>:/png/settings.jpg</iconset>
-    </property>
-   </widget>
-   <widget class="QLabel" name="status">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>170</y>
-      <width>141</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
+      <normaloff>:/png/res/settings.jpg</normaloff>:/png/res/settings.jpg</iconset>
     </property>
    </widget>
    <widget class="QLabel" name="keyCheck">

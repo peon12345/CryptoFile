@@ -16,7 +16,7 @@ public:
 
     void clearAll();
 
-    QMap<uint8_t*,size_t>& getLockPtrs();
+    QMap<uint8_t*,size_t>& getRefLockPtrs();
 
     ~MemoryManager();
 

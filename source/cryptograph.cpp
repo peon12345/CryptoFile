@@ -1,20 +1,18 @@
 #include "cryptograph.h"
 
 
-Cryptograph::Cryptograph(QString &key , QString &IV , int keyLenght)
+Cryptograph::Cryptograph(QString key , QString IV , int keyLenght , bool generateIV) :isGenerateData(generateIV)
 {
 
     if(IV.size() == 0){
-        m_alg = new AesCbc(key,keyLenght);
+        m_alg = new AesCbc(key,keyLenght,generateIV);
     } else{
         m_alg = new AesCbc(key,IV,keyLenght);
     }
 
-    m_alg->getPointersToLock(m_memoryManager.getLockPtrs());
-    m_memoryManager.lockAll();
+     m_alg->getPointersToClear(m_memoryManager.getRefLockPtrs());
+     m_memoryManager.lockAll();
 }
-
-
 
 
 Cryptograph::~Cryptograph()
@@ -23,20 +21,30 @@ Cryptograph::~Cryptograph()
 }
 
 
-int Cryptograph::checkKey( const QString &key){
-    return AES::checkKey(key);
-}
+int Cryptograph::checkKey( const QString key, int algID){
+    switch (algID) {
+    case 0:
+        return AES::checkKey(key);
+        break;
+    case 1:
+        return AES::checkKey(key);
+        break;
+    case 2:
+        return AES::checkKey(key);
+        break;
+    }
 
+}
 
 void Cryptograph::writeNeedDelete(QByteArray& input , size_t size){
 
-    uint8_t countDeleteNull = 16 - ( size % blockSize );
+    int blockSize = m_alg->getBlockSize();
+    uint8_t countDeleteNull = blockSize - ( size % blockSize );
 
     input.append(countDeleteNull);
 }
 
-QString Cryptograph::keyGen(int keyLenght){
-
+QString Cryptograph::keyGen(int algID){
 
     std::default_random_engine generator;
 
@@ -45,6 +53,19 @@ QString Cryptograph::keyGen(int keyLenght){
 
     std::uniform_int_distribution<uint8_t> randValue(0,255);
     QString key;
+
+    int keyLenght;
+    switch(algID){
+    case 0:
+        keyLenght = 16;
+        break;
+    case 1:
+        keyLenght = 24;
+        break;
+    case 2:
+        keyLenght = 32;
+        break;
+    }
 
     for(int j = 0; j < keyLenght; j++){
 
@@ -57,7 +78,7 @@ QString Cryptograph::keyGen(int keyLenght){
 
     while(statusKey != 0){
 
-        statusKey = checkKey(key);
+        statusKey = checkKey(key,algID);
 
         switch (statusKey) {
 
@@ -66,7 +87,6 @@ QString Cryptograph::keyGen(int keyLenght){
             return key;
         }
             break;
-
 
         case 2: {
             std::uniform_int_distribution<uint8_t> randPos(0,keyLenght-1);
@@ -83,7 +103,6 @@ QString Cryptograph::keyGen(int keyLenght){
                     break;
                 }
 
-
                 if(pos != keyLenght){
                     pos++;
                     counterLenght++;
@@ -94,7 +113,6 @@ QString Cryptograph::keyGen(int keyLenght){
 
                 key[pos] = key[pos].toUpper();
             }
-
         }
             break;
 
@@ -122,7 +140,7 @@ QString Cryptograph::keyGen(int keyLenght){
             while(key[pos].isUpper() != key[pos].toLower()){
 
                 if(counterLenght == keyLenght){
-                    return ""; // значит ни один символ не перевелся
+                    return ""; // значит ни один символ не перевелся и сдаемся
                     break;
                 }
 
@@ -140,11 +158,10 @@ QString Cryptograph::keyGen(int keyLenght){
             break;
         }
     }
-
     return key;
 }
 
-void Cryptograph::encryptFile(QByteArray& input , QByteArray& output  ){
+void Cryptograph::encryptFile(QByteArray& input,QByteArray& output){
 
     //делим на блоки
     int blockSize = m_alg->getBlockSize();
@@ -165,7 +182,6 @@ void Cryptograph::encryptFile(QByteArray& input , QByteArray& output  ){
                 state[k] = input.at(inputIterator);
                 inputIterator++;
             } else{
-
                 state[k] = 0;
             }
         }
@@ -186,33 +202,33 @@ int Cryptograph::getSizeMetaData(){
 }
 
 void Cryptograph::setMetaData(QByteArray &input){
-
     m_alg->setMetaData(input);
 }
 
 
 void Cryptograph::getMetaData(QByteArray &input){
-
     input += m_alg->getMetaData();
 }
 
-int Cryptograph::getBlockSize(){
+bool Cryptograph::isGeneratedData(){
+    return isGenerateData;
+}
 
+int Cryptograph::getBlockSize(){
     return m_alg->getBlockSize();
 }
 
 
 void Cryptograph::decryptFile(QByteArray &input, QByteArray &output){
     //рзделяем на блоки
+    int blockSize = m_alg->getBlockSize();
     int counterState = std::ceil((float)(input.size()-1) / blockSize);
     int inputIterator = 0;
 
-    int blockSize = m_alg->getBlockSize();
 
     uint8_t encryptedState[blockSize];
 
     uint8_t deleteLastNull = input.at(input.size()-1);
-
 
     for (int i = 1; i <= counterState; i++) {
 
@@ -239,14 +255,12 @@ void Cryptograph::decryptFile(QByteArray &input, QByteArray &output){
             for(int j = 0; j < blockSize; j++ ){
 
                 output.append(encryptedState[j]);
-
             }
         } else{
 
             for(int j = 0; j < (blockSize - deleteLastNull); j++ ){
 
                 output.append(encryptedState[j]);
-
             }
         }
     }

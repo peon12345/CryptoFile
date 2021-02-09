@@ -7,15 +7,15 @@ class AesCbc : public AES
 public:
 
     AesCbc() = delete;
-    AesCbc(QString &key,QString &IV,int keyLenght);
-    AesCbc(QString &key,int keyLenght);
+    AesCbc(QString key,QString IV,int keyLenght);
+    AesCbc(QString key,int keyLenght, bool generateIV = true);
 
-    void encrypt(uint8_t input[16],  uint8_t output[]) override;
-    void decrypt( uint8_t input[16],  uint8_t *output) override;
+    void encrypt(uint8_t input[16], uint8_t output[]) override;
+    void decrypt( uint8_t input[16], uint8_t *output) override;
 
-    void convertAndSetIV(QString &IV);
+    void convertAndSetIV(QString IV);
 
-    void  getPointersToLock(QMap<uint8_t*,size_t>& ptrsForLock) override;
+    void  getPointersToClear(QMap<uint8_t*,size_t>& ptrsForLock) override;
     int getSizeMetaData() override;
 
     QByteArray getMetaData() override;
@@ -29,7 +29,7 @@ public:
     uint8_t m_prevState[4][4];
     uint8_t buffer[4][4];
     bool isIVgenerated;
-
+    bool isIVpasted;
 };
 
 #endif // AESCBC_H

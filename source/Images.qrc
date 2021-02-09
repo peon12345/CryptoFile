@@ -1,19 +1,19 @@
 <RCC>
-    <qresource prefix="/gifs">
-        <file>resent.gif</file>
-        <file>links-legs-kicking.gif</file>
-    </qresource>
+    <qresource prefix="/gifs"/>
     <qresource prefix="/png">
-        <file>5.png</file>
-        <file>ICON_CRYPTO.png</file>
-        <file>enc.jpg</file>
-        <file>enc2.jpg</file>
-        <file>folder.png</file>
-        <file>grand-master-key.png</file>
-        <file>settings.jpg</file>
-        <file>start.png</file>
-        <file>add.jpg</file>
-        <file>ok.png</file>
-        <file>cancel.png</file>
+        <file>res/5.png</file>
+        <file>res/add.jpg</file>
+        <file>res/cancel.png</file>
+        <file>res/enc.jpg</file>
+        <file>res/enc2.jpg</file>
+        <file>res/folder.png</file>
+        <file>res/grand-master-key.png</file>
+        <file>res/ICON_CRYPTO.png</file>
+        <file>res/links-legs-kicking.gif</file>
+        <file>res/ok.png</file>
+        <file>res/resent.gif</file>
+        <file>res/settings.jpg</file>
+        <file>res/start.png</file>
+        <file>res/WTF_GIF.gif</file>
     </qresource>
 </RCC>

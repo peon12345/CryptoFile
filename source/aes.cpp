@@ -170,50 +170,44 @@ AES::AES(int keyLenght)
 {
     switch (keyLenght) {
     case 128:
-        m_keyLenght = KEY_LENGHT_128;
         m_wKeyLenght = EXPANDED_KEY_LENGTH_128;
         m_round = ROUND_128;
         break;
 
     case 192:
-        m_keyLenght = KEY_LENGHT_192;
         m_wKeyLenght = EXPANDED_KEY_LENGTH_192;
         m_round = ROUND_192;
         break;
 
     case 256:
-        m_keyLenght = KEY_LENGHT_192;
-        m_wKeyLenght = EXPANDED_KEY_LENGTH_192;
+        m_wKeyLenght = EXPANDED_KEY_LENGTH_256;
         m_round = ROUND_256;
         break;
 
     default:
-        m_keyLenght = KEY_LENGHT_256;
         m_wKeyLenght = EXPANDED_KEY_LENGTH_256;
         m_round = ROUND_256;
         break;
     }
-
-    m_key = new uint8_t[m_keyLenght];
     m_wKey = new uint8_t[m_wKeyLenght];
 }
 
 AES::~AES(){
-
+ delete[] m_wKey;
 }
 
-void AES::convertToKeyUInt8(QString &key){
+void AES::convertToKeyUInt8(QString key){
 
     QByteArray keyByteArray(key.toUtf8());
 
-    for(int k = 0; k < m_keyLenght ; k++){
+    for(int k = 0; k < KEY_LENGHT ; k++){
 
         if( k < key.size()) {
             m_key[k] = keyByteArray.at(k);
         }
 
-        if(k == m_keyLenght-1){
-            if(key.size() > m_keyLenght){
+        if(k == KEY_LENGHT-1){
+            if(key.size() > KEY_LENGHT){
                 for(int i = 1; i < key.size() - k; i++ ){
                     m_key[i - 1] -= keyByteArray.at(k+i);
                 }
@@ -222,28 +216,29 @@ void AES::convertToKeyUInt8(QString &key){
     }
 
     key.remove(0,key.size());
-    key = nullptr;
 }
 
 int AES::getBlockSize(){
     return blockSize;
 }
 
-void AES::setKey(QString &key){
+void AES::setKey(QString key){
 
     convertToKeyUInt8(key);
     KeyExpansion();
 }
 
-int  AES::checkKey(const QString &key){
+int  AES::checkKey(const QString key){
 
     bool isContainUpper = false;
     bool isContainLower = false;
     bool isContainNumber = false;
 
+   const int minKeyLenght = 8;
+
     if(key != nullptr){
 
-        if(key.length() > 7 || key.length() > 30){
+        if(key.length() > minKeyLenght){
 
             for(int i = 0; i < key.length(); i++ ) {
 
@@ -266,7 +261,6 @@ int  AES::checkKey(const QString &key){
                 return 3;
             }
 
-
             if(!isContainLower){
                 return 4;
             }
@@ -288,11 +282,11 @@ void AES::KeyExpansion() {
     static constexpr uint8_t RCON [11] = {0x8d, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36};
 
     std::fill(m_wKey, m_wKey+m_wKeyLenght, 0);
-    std::copy(m_key, m_key+m_keyLenght, m_wKey);
+    std::copy(m_key, m_key+KEY_LENGHT, m_wKey);
 
-    int keyPos = m_keyLenght;
+    int keyPos = KEY_LENGHT;
 
-    for(int i = 0; i < 10; i++){
+    for(int i = 0; i < m_round; i++){
 
         //получаем последние 4 байта
         uint8_t lastColumn[4];
@@ -388,8 +382,6 @@ void AES::MixColumn( uint8_t state[4][4])  {
         state[2][i] = col[0] ^ col[1] ^ GALOIS2[col[2]] ^ GALOIS3[col[3]];
         state[3][i] = GALOIS3[col[0]] ^ col[1] ^ col[2] ^ GALOIS2[col[3]];
     }
-
-
 }
 
 void AES::AddRoundKey(uint8_t state[4][4], uint8_t  roundKey[4][4]) {
@@ -450,5 +442,3 @@ void AES::invMixColumn( uint8_t state[4][4])  {
     }
 
 }
-
-

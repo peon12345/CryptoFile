@@ -2,16 +2,14 @@
 
 MemoryManager::MemoryManager()
 {
-
 }
 
 MemoryManager::~MemoryManager()
 {
-
  clearAll();
 }
 
-QMap<uint8_t*,size_t>& MemoryManager::getLockPtrs(){
+QMap<uint8_t*,size_t>& MemoryManager::getRefLockPtrs(){
 
     return m_lockPtrs;
 }
@@ -53,9 +51,3 @@ void MemoryManager::clearAll(){
      ++it;
     }
 }
-
-
-
-
-
-

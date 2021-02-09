@@ -5,6 +5,10 @@
 #include <QFileDialog>
 #include <QDir>
 
+#include <future>
+#include <thread>
+//#include <windows.h>
+
 #include "filemanager.h"
 #include "settings.h"
 #include "log.h"
@@ -32,9 +36,11 @@ private slots:
 
     void on_lineKey_textEdited(const QString &arg1);
 
+
 private:
     Settings settings;
-    Log log;
+    FileManager fileManager;
+    Log m_log;
 
     //Cryptograph* cryptograph;
     Ui::MainWindow *ui;

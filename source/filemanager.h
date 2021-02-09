@@ -13,30 +13,44 @@
 #include "cryptograph.h"
 
 
-class FileManager
+class FileManager : public QObject
 {
+    Q_OBJECT
 public:
     FileManager();
-    FileManager(const Parametrs &parametrs);
+    FileManager(const Parametrs &parametrs,QObject *parent = nullptr);
+
+    void updateParams(Parametrs &parametrs);
 
     void cryptoFolder(QString pathFolder, QString key, bool action);
 
-    QMap<QString, size_t> copyFilesDir(QString path , bool needCopyFiles = false);
-     bool checkFiles(size_t sizeFile ,QString path);
-     void replaceFile(QFile &file , QByteArray &byteArray);
-     void getData(QFile &file,QByteArray &byteArray);
+    QMap<QString, size_t> copyFilesDir(QString path);
+    void deleteFolder(QString path);
 
-     int backupFolder();
+    bool checkFiles(size_t sizeFile ,QString path);
+    void replaceFile(QFile &file , QByteArray &byteArray);
+
+    static inline const QString BACK_UP_FOLDER_NAME = "BackupFiles";
 
 private:
-    int encryptFile(QString path,Cryptograph *cryptograph,size_t size);
-    int decryptFile(QString path,Cryptograph *cryptograph,size_t size);
 
-    void copyFilesPath(QString path, QMap<QString, size_t> &filesDir , QString dst = "");
+    int encryptFile(QString path,Cryptograph *cryptograph,size_t size);
+    int decryptFile(QString path,Cryptograph *cryptograph,size_t size = 0);
+
+    void copyFilesPath(QString path, QMap<QString, size_t> &filesDir , QString dst = "" , bool backUp = false);
 
     Parametrs m_parametrs;
-    bool m_rezervFiles;
     quint64 totalSize;
+
+signals:
+    void sendMessage(QString message,int type = 0);
+    void compliteStep(int percent);
+    void complete();
+
+public slots:
+    void clearBackUpFolder();
+    void backUpFolder();
+
 };
 
 #endif // BACKUPMANAGER_H

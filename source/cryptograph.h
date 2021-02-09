@@ -13,8 +13,8 @@
 class Cryptograph
 {
 public:
-    explicit Cryptograph( QString &key ,QString &IV,int keyLenght);
-    explicit Cryptograph( QString &key ,QString encryptionType = "AES");
+    explicit Cryptograph( QString key ,QString IV,int keyLenght,bool generateIV = true);
+    //explicit Cryptograph( QString key ,QString encryptionType = "AES");
     Cryptograph() = delete;
 
     void encryptFile(QByteArray& input,QByteArray& output );
@@ -24,12 +24,13 @@ public:
 
     void getMetaData(QByteArray &input);
     void setMetaData(QByteArray &input);
+    bool isGeneratedData();
 
     int getSizeMetaData();
     int getBlockSize();
 
-    static QString keyGen(int keyLenght);
-    static int checkKey( const QString &key);
+    static QString keyGen(int algID);
+    static int checkKey( const QString key,int algID);
 
     Cryptograph(const Cryptograph&) = delete;
     Cryptograph& operator=(const Cryptograph&) = delete;
@@ -39,6 +40,7 @@ public:
 private:
      Ialgorithm *m_alg;
      MemoryManager m_memoryManager;
+     bool isGenerateData;
 };
 
 #endif // ENCRYPT_H

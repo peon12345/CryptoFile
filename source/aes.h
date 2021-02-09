@@ -9,11 +9,10 @@
 #include "Ialgorithm.h"
 #include "memorymanager.h"
 
-constexpr int blockSize = 16;
+
 
 class AES : public Ialgorithm
 {
-
 public:
 
     AES() = delete;
@@ -21,10 +20,12 @@ public:
 
     virtual ~AES();
 
-    void setKey(QString &key) override;
+    void setKey(QString key) override;
     int getBlockSize() override;
 
-    static int checkKey( const QString &key);
+    static int checkKey( const QString key);
+
+    static constexpr int blockSize = 16;
 
 private:
 
@@ -33,10 +34,12 @@ private:
     static constexpr int ROUND_192 = 12;
     static constexpr int ROUND_256 = 14;
 
-    //длина ключа
-    static constexpr int KEY_LENGHT_128 = 16;
-    static constexpr int KEY_LENGHT_192 = 24;
-    static constexpr int KEY_LENGHT_256 = 32;
+//    //длина ключа
+//    static constexpr int KEY_LENGHT_128 = 16;
+//    static constexpr int KEY_LENGHT_192 = 24;
+//    static constexpr int KEY_LENGHT_256 = 32;
+    static constexpr int KEY_LENGHT = 16;
+
 
     //длина расширенного ключа
     static constexpr int EXPANDED_KEY_LENGTH_128 = 176;
@@ -45,16 +48,15 @@ private:
 
 protected:
 
-    void convertToKeyUInt8(QString &input);
+    void convertToKeyUInt8(QString input);
 
     int m_round;
 
-    uint8_t *m_key;
-    int m_keyLenght;
+    uint8_t m_key[KEY_LENGHT];
+   // int m_keyLenght;
 
     uint8_t *m_wKey;
     int m_wKeyLenght;
-
 
     uint8_t m_roundKey[4][4];
 
@@ -72,8 +74,6 @@ protected:
     void invSubBytes (uint8_t keyColumn[4]);
     void invShiftRows(uint8_t state[4][4]);
     void invMixColumn(uint8_t state[4][4]);
-
-
 };
 
 #endif // AES_H

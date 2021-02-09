@@ -9,54 +9,59 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     setWindowTitle("CryptoFile");
-    setWindowIcon(QIcon(":/png/ICON_CRYPTO.png"));
+    setWindowIcon(QIcon(":/png/res/ICON_CRYPTO.png"));
+
+    connect(&fileManager, &FileManager::complete, &m_log, &Log::showResult);
+    connect(&fileManager, &FileManager::sendMessage, &m_log, &Log::addMessage);
+    connect(&fileManager, &FileManager::compliteStep, &m_log, &Log::addProgress);
+    connect(&m_log,&Log::needBackUp,&fileManager,&FileManager::backUpFolder);
+    connect(&m_log,&Log::needClearBackUpFolder,&fileManager,&FileManager::clearBackUpFolder);
+
+    if(!QDir(QDir::currentPath() + QDir::separator() + FileManager::BACK_UP_FOLDER_NAME).exists()){
+        QDir().mkdir(QDir::currentPath() + QDir::separator() + FileManager::BACK_UP_FOLDER_NAME);
+    }
 
 }
 
 MainWindow::~MainWindow()
 {
     ui->lineKey->setText("XXXXXXXXXXXXXXXXXX");
-
     delete ui;
 }
 
-
 void MainWindow::on_pushButton_2_clicked()
-
 {
-    log.startMovie();
-
-    if(Cryptograph::checkKey(ui->lineKey->text()) != 0){
-        ui->status->setText("Ключ слишком простой");
+    if(Cryptograph::checkKey(ui->lineKey->text(),settings.getAlgID()) != 0 ){
+        ui->keyCheck->setText("Ключ слишком простой");
         return void();
     }
 
+    settings.setPath(ui->lineDir->text());
 
     bool encryptAction;
+    QString actionStr;
     if(ui->comboBox->currentIndex() == 0){
         encryptAction = true;
+        actionStr = "Шифрование папки "+ui->lineDir->text()+"";
     } else{
         encryptAction = false;
+        actionStr = "Дешифрование папки "+ui->lineDir->text()+"";
     }
 
-    FileManager fileManager(settings.getParams());
+    m_log.showLog(actionStr);
 
-    fileManager.cryptoFolder(ui->lineDir->text(),ui->lineKey->text(),encryptAction);
+    fileManager.updateParams(settings.getParams());
 
+    std::thread t(&FileManager::cryptoFolder,std::ref(fileManager),ui->lineDir->text(),ui->lineKey->text(),encryptAction);
+    t.detach();
 
-    log.stopMovie();
-    if(encryptAction){
-        ui->status->setText("Зашифровано");
-    } else {
-        ui->status->setText("Дешифровано");
-    }
+    //проверка на корректность шифра
+    //проверка на миссклик шифrе\дешифр
 
 }
 
 void MainWindow::on_pushButton_clicked()
 {
-
-
     QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
                                                     "/home",
                                                     QFileDialog::ShowDirsOnly
@@ -67,29 +72,11 @@ void MainWindow::on_pushButton_clicked()
 
 void MainWindow::on_pushButtonKeyGen_clicked()
 {
-    Parametrs param = settings.getParams();
-
-    int keyLenght;
-    switch(param.algID){
-    case 0:
-        keyLenght = 16;
-        break;
-
-    case 1:
-        keyLenght = 24;
-        break;
-
-    case 2:
-        keyLenght = 32;
-        break;
-    }
-
-    ui->lineKey->setText(Cryptograph::keyGen(keyLenght));
+    ui->lineKey->setText(Cryptograph::keyGen(settings.getAlgID()));
 }
 
 void MainWindow::on_pushButtonSettings_clicked()
 {
-
     settings.show();
 }
 
@@ -99,7 +86,7 @@ void MainWindow::on_lineKey_textEdited(const QString &arg1)
         return void();
     }
 
-    int status = Cryptograph::checkKey(arg1);
+    int status = Cryptograph::checkKey(arg1,settings.getAlgID());
 
     switch (status)
     {
@@ -123,22 +110,6 @@ void MainWindow::on_lineKey_textEdited(const QString &arg1)
         break;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

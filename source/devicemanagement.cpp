@@ -72,7 +72,6 @@ QString DeviceManagement::getSerialDevice(QString deviceType){
 
     }
 
-
     RegCloseKey(hKey);
     return "";
 
